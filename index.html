@@ -20,8 +20,8 @@ window.onload=function(){
   setInterval(game,1000/40);
 }
 
-//img = new Image();
-//img.src = 'mister.png';
+img = new Image();
+img.src = 'mister.png';
 
 left=right=up=false;
 px=py=10;
@@ -71,7 +71,7 @@ function game(){
   else {
     clap.fillStyle="red";
     clap.fillText("aerial", 15, 115, 300);
-    //clap.drawImage(img,15, 200);
+    clap.drawImage(img,15, 200);
   }
   ctx.fillStyle="black";
   ctx.fillRect(0,0,canv.width,canv.height);

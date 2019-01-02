@@ -1,0 +1,180 @@
+<canvas id="gc" width="400" height="400" onmousemove="trackMouse(event)" onmousedown="dragMouse()" onmouseup="laxMouse()"></canvas>
+<canvas id="mc" width="400" height="400"></canvas>
+<body>
+    <p>
+        googy
+    </p>
+    <p id="byakuya">
+    </p>
+</body>
+
+
+<script>
+window.onload=function(){
+  canv=document.getElementById("gc");
+  coop=document.getElementById("mc");
+  ctx=canv.getContext("2d");
+  clap=coop.getContext("2d");
+  document.addEventListener("keydown",keyPush);
+  document.addEventListener("keyup",keyRelease);
+  setInterval(game,1000/40);
+}
+
+//img = new Image();
+//img.src = 'mister.png';
+
+left=right=up=false;
+px=py=10;
+dx=dy=20;
+vx=vy=0;
+characterwidth=20;
+characterheight=40;
+tilesacross=20;
+onGround=false;
+onLWall=false;
+onRWall=false;
+gravity=20;
+dragColor="purple"
+function game(){
+  onLWall=false;
+  onRWall=false;
+  onGround=false;
+
+  px+=vx;
+  py+=vy;
+  if(px<1){
+    px = 1;
+    onLWall=true;
+  }
+  if(px>canv.width-characterwidth-1){
+    px = canv.width-characterwidth-1;
+    onRWall=true;
+  }
+  if(py<0){
+    y = 0;
+  }
+  if(py>canv.height-characterheight){
+    py = canv.height-characterheight;
+    onGround=true;
+  }
+  clap.font = '100px serif';
+  clap.fillStyle="white";
+  clap.fillRect(0,0,coop.width,coop.height);
+  if(onGround){
+    clap.fillStyle="black";
+    clap.fillText("grounded", 15, 115, 300);
+  }
+  else if(onLWall||onRWall){
+    clap.fillStyle="lime";
+    clap.fillText("wall grab", 15, 115, 300);
+  }
+  else {
+    clap.fillStyle="red";
+    clap.fillText("aerial", 15, 115, 300);
+    //clap.drawImage(img,15, 200);
+  }
+  ctx.fillStyle="black";
+  ctx.fillRect(0,0,canv.width,canv.height);
+
+  if(left){
+    vx=-6;
+  }
+  if(right){
+    vx=6;
+  }
+  if(!left&&!right){
+    vx*=0.3;
+  }
+  if(up&&onGround){
+    vy=-12;
+  }
+  if(!onGround){
+    vy+=1.2;
+    if(onLWall||onRWall){
+        vy*=.6;
+        if(up&&onLWall){
+          vy=-12;
+          vx=10;
+        }
+        if(up&&onRWall){
+          vy=-12;
+          vx=-10;
+        }
+    }
+    if(vy>20){
+      vy=20;
+    }
+  }
+
+  ctx.fillStyle="orange";
+  ctx.fillRect(px, py, characterwidth, characterheight);
+  ctx.fillStyle=dragColor;
+  ctx.fillRect(dx,dy, characterwidth, characterheight);
+}
+function keyRelease(evt){
+  switch(evt.keyCode){
+    case 37:
+      left=false;
+      break;
+    case 65:
+        left=false;
+        break;
+    case 38:
+      up=false;
+      break;
+    case 87:
+        up=false;
+        break;
+    case 39:
+      right=false;
+      break;
+    case 68:
+      right=false;
+      break;
+    case 40:
+      break;
+    case 83:
+      break;
+  }
+}
+function keyPush(evt){
+  switch(evt.keyCode){
+    case 37:
+      left=true;
+      break;
+    case 65:
+        left=true;
+        break;
+    case 38:
+      up=true;
+      break;
+    case 87:
+        up=true;
+        break;
+    case 39:
+      right=true;
+      break;
+    case 68:
+      right=true;
+      break;
+    case 40:
+      break;
+    case 83:
+      break;
+  }
+}
+
+function trackMouse(e){
+    var x = e.clientX;
+    var y = e.clientY;
+    dx=x-8;
+    dy=y-8;
+    var coor = "Coordinates: ("+dx+","+dy+")";
+    document.getElementById("byakuya").innerHTML = coor;}
+
+function dragMouse(){
+    dragColor="pink"}
+
+function laxMouse(){
+    dragColor="purple"}
+</script>
